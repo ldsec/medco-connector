@@ -126,6 +126,40 @@ func (a *Client) GetExploreQuery(params *GetExploreQueryParams, authInfo runtime
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
+/*
+GetNodeStatus gets info about node status
+*/
+func (a *Client) GetNodeStatus(params *GetNodeStatusParams, authInfo runtime.ClientAuthInfoWriter) (*GetNodeStatusOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetNodeStatusParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getNodeStatus",
+		Method:             "GET",
+		PathPattern:        "/node/status",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &GetNodeStatusReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetNodeStatusOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetNodeStatusDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
 // SetTransport changes the transport on the client
 func (a *Client) SetTransport(transport runtime.ClientTransport) {
 	a.transport = transport
