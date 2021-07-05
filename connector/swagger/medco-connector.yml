@@ -698,6 +698,18 @@ responses:
           $ref: "#/definitions/timers"
 
 definitions:
+  exploreSearchCountParams:
+    type: "object"
+    required:
+      - userPublicKey
+      - queryID
+    properties:
+      userPublicKey:
+        type: "string"
+        pattern: '^[\w=-]+$'  
+      queryID:
+        type: "string"
+        pattern: '^[\w:-]+$'
   exploreSearchConcept:
     type: "object"
     required:
@@ -712,6 +724,8 @@ definitions:
         enum:
           - info
           - children
+      subjectCountQueryInfo:
+        $ref: "#/definitions/exploreSearchCountParams"
 
   exploreSearchModifier:
     type: "object"
@@ -735,11 +749,15 @@ definitions:
         enum:
           - info
           - children
+      subjectCountQueryInfo:
+        $ref: "#/definitions/exploreSearchCountParams"
 
   exploreSearchResultElement:
     type: "object"
     required: [leaf]
     properties:
+      timers:
+        $ref: "#/definitions/timers"
       path:
         type: "string"
       appliedPath:
@@ -750,6 +768,14 @@ definitions:
         type: "string"
       code:
         type: "string"
+      subjectCount:
+        type: "string"
+        description: "Local subject count (in clear) for a single i2b2 node. This field
+        is meant to be used in the communications between the connector and the i2b2 server."
+      subjectCountEncrypted:
+        type: "string"
+        description: "Global subject count (encrypted) for all the i2b2 nodes. This field
+        is meant to be used in the communications between the connector and the client."
       type:
         type: "string"
         enum:
